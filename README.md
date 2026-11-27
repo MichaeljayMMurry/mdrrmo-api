@@ -1,61 +1,42 @@
-# MDRRMO API — PHP REST API Starter
+# MDRRMO PHP API — classroom database setup
 
-Educational scaffold for the **MDRRMO Constitutes Website**. This project follows the repository structure shown in the Step 1 classroom slide. **It is not a live emergency response system.** The incidents endpoints intentionally return HTTP 501 and do not accept, store, or display incident data until security, authorization, verification, and operational procedures are approved by the relevant MDRRMO office.
+This ZIP contains a reconstructed, compatible classroom project based on the repository structure in the provided slides and PHP snippets. **It is not a verified byte-for-byte download of the teacher's QR code files.** It is also **not a production emergency reporting system**.
 
-## Project structure
+## Step 1 — Repository structure
 
 ```text
 mdrrmo-api/
-├── public/
-│   ├── index.php
-│   └── api/
-│       └── incidents/
-│           ├── create.php
-│           ├── list.php
-│           └── view.php
-├── src/
-│   ├── database.php
-│   └── db_connection.php
-├── .dockerignore
-├── .gitignore
-├── .env.example
-├── Dockerfile
-├── README.md
-└── test-db.php
+  public/
+    index.php
+    api/incidents/create.php
+    api/incidents/list.php
+    api/incidents/view.php
+  src/
+    db_connection.php
+    database.php
+  Dockerfile
+  .dockerignore
+  .gitignore
+  .env.example
+  test-db.php
+  README.md
 ```
 
-## GitHub classroom step
+## Step 2 — Database configuration
 
-1. At [github.com/new](https://github.com/new), create a repository named `mdrrmo-api` under **your own account**.
-2. Select **Private** unless your instructor explicitly requires Public, since the API project may eventually include sensitive development work. Never commit passwords or personal emergency data.
-3. Add repository files using **Add file → Upload files**, preserving the directory paths, or use Git locally.
-4. Commit the files. Verify the tree looks like the slide.
+- `src/db_connection.php`: creates a PostgreSQL PDO connection using `DATABASE_URL`, decodes URL credentials, enables SSL and hides detailed errors from public responses.
+- `src/database.php`: compatibility wrapper for older files that call `mdrrmo_db()`.
+- Set a real `DATABASE_URL` under **Render → your web service → Environment**, not inside GitHub.
+- The `pdo_pgsql` driver is installed by the Dockerfile.
+- `test-db.php` is CLI-only. It returns a success/failure message without revealing credentials.
 
-### Git commands (optional)
+## Deployment
 
-```sh
-git init
-git add .
-git commit -m "Initial MDRRMO PHP REST API scaffold"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/mdrrmo-api.git
-git push -u origin main
-```
+1. Open the existing repository `MichaeljayMMurry/mdrrmo-api` and upload the contents of this folder while keeping the paths above. Replace the same-named files after comparing changes.
+2. On Render, ensure `mdrrmo-api` points at the correct GitHub repository and branch, with Docker runtime.
+3. Create or connect an approved PostgreSQL database, then set `DATABASE_URL` securely in Render Environment.
+4. Deploy and verify `/` shows `status: starter`. Use the Render logs to diagnose deployment errors. Do not paste the database URL publicly.
 
-## Local testing
+## Important scope
 
-Use PHP 8.3+ and the PDO PostgreSQL driver. With PHP's built-in server:
-
-```sh
-php -S localhost:8000 -t public
-```
-
-Open `http://localhost:8000`. The incident endpoints are placeholders and respond with 501 until an approved secure implementation exists.
-
-## Database configuration
-
-Environment variables: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. Do not commit your actual values. Set them in the hosting provider's secret/environment settings. `test-db.php` is CLI-only and checks the configured PostgreSQL connection.
-
-## Render note
-
-The Dockerfile runs Apache with PHP and the PostgreSQL PDO extension. Build using a **Render Web Service** with Docker, then configure required environment variables in Render. **Do not use this API as a real emergency dispatch endpoint.** It needs a documented authorization and incident verification workflow, abuse protection, audit trails, secure handling of personal/location data, backups and appropriate real responder integration before any production use.
+The incident endpoints intentionally return HTTP 501. They must not accept or publish real emergency reports before verified authorization, staff access control, abuse protection, audit trails, operational procedures, and approved database schema exist. The snippets supplied in chat differ in paths and schemas; copying them without reconciliation would not be reliable. The separate Hatchable classroom website retains a non-submitting preview form.
